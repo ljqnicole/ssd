@@ -1,22 +1,32 @@
-version: '3'
+version: "3"
 
 services:
   jenkins:
     container_name: jenkins
     build: ./jenkins
     ports:
-      - '8080:8080'
-      - '443:8443'
-      - '50000:50000'
+      - "8080:8080"
+      - "443:8443"
+      - "50000:50000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./jenkins_home:/var/jenkins_home
-  
-  webapp:
-    container_name: webapp
-    build: ./webapp
+
+  php_web:
+    container_name: php_web
+    build: ./php_app
     ports:
       - "80:80"
+
+  git-server:
+    build:
+      dockerfile: ./repos/gitserver.Dockerfile
+      context: .
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./repos:/home/git
 
 volumes:
   jenkins_data:
